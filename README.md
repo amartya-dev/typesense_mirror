@@ -17,11 +17,52 @@ This script fetches the Typesense Docker image from [Docker Hub](https://hub.doc
    - `write:packages` - to push packages to GitHub Container Registry
    - `read:packages` - to read packages from GitHub Container Registry
 
-### 2. Make the script executable
+### 2. Configure Environment Variables
+
+You have two options for configuration:
+
+#### Option A: Quick Setup (Recommended)
+Run the interactive setup script:
+```bash
+chmod +x setup_env.sh
+./setup_env.sh
+```
+
+This will prompt you for your credentials and create a `.env` file automatically.
+
+#### Option B: Manual Setup
+1. Copy the example environment file:
+   ```bash
+   cp env.example .env
+   ```
+2. Edit `.env` and replace the placeholder values with your actual credentials:
+   ```bash
+   # Your GitHub username
+   GITHUB_USERNAME=your-actual-username
+   
+   # Your GitHub Personal Access Token
+   GITHUB_TOKEN=your-actual-token
+   
+   # GitHub repository name
+   GITHUB_REPO=your-username/your-repo-name
+   ```
+
+### 3. Make the script executable
 
 ```bash
 chmod +x typesense_mirror.py
 ```
+
+## Quick Start
+
+After setting up your environment variables, you can use the example script:
+
+```bash
+chmod +x example_usage.sh
+./example_usage.sh
+```
+
+This will automatically load your configuration from the `.env` file and run the mirror script.
 
 ## Usage
 
@@ -51,8 +92,8 @@ python3 typesense_mirror.py \
 - `--username`: Your GitHub username (required)
 - `--token`: GitHub Personal Access Token with `write:packages` permission (required)
 - `--repo`: GitHub repository name in format `username/repo-name` (required)
-- `--source-tag`: Source tag to pull from Docker Hub (default: `latest`)
-- `--target-tag`: Target tag for GitHub Container Registry (default: `latest`)
+- `--source-tag`: Source tag to pull from Docker Hub (default: `29.0`)
+- `--target-tag`: Target tag for GitHub Container Registry (default: `29.0`)
 - `--skip-login`: Skip Docker login (useful if already logged in)
 
 ## Examples
@@ -77,13 +118,13 @@ python3 typesense_mirror.py \
 
 ### Mirror multiple versions
 ```bash
-# Mirror latest
+# Mirror default version (29.0)
 python3 typesense_mirror.py \
   --username johndoe \
   --token ghp_xxxxxxxxxxxxxxxxxxxx \
   --repo johndoe/my-typesense-mirror \
-  --source-tag latest \
-  --target-tag latest
+  --source-tag 29.0 \
+  --target-tag 29.0
 
 # Mirror specific version
 python3 typesense_mirror.py \
@@ -100,11 +141,11 @@ After successfully running the script, you can use the mirrored image:
 
 ```bash
 # Pull the image
-docker pull ghcr.io/YOUR_USERNAME/REPO_NAME/typesense:latest
+docker pull ghcr.io/YOUR_USERNAME/REPO_NAME/typesense:29.0
 
 # Run Typesense
 docker run -p 8108:8108 -v typesense-data:/data \
-  ghcr.io/YOUR_USERNAME/REPO_NAME/typesense:latest \
+  ghcr.io/YOUR_USERNAME/REPO_NAME/typesense:29.0 \
   --data-dir /data --api-key=xyz --enable-cors
 ```
 
@@ -137,8 +178,8 @@ jobs:
             --username ${{ github.actor }} \
             --token ${{ secrets.GITHUB_TOKEN }} \
             --repo ${{ github.repository }} \
-            --source-tag latest \
-            --target-tag latest
+            --source-tag 29.0 \
+            --target-tag 29.0
 ```
 
 ## Security Notes

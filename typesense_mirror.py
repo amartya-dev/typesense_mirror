@@ -46,7 +46,7 @@ def login_to_ghcr(username: str, token: str) -> bool:
         return False
 
 
-def pull_typesense_image(tag: str = "latest") -> bool:
+def pull_typesense_image(tag: str = "29.0") -> bool:
     """Pull Typesense image from Docker Hub."""
     try:
         run_command([
@@ -108,13 +108,13 @@ def main():
     )
     parser.add_argument(
         "--source-tag", 
-        default="latest",
-        help="Source tag to pull from Docker Hub (default: latest)"
+        default="29.0",
+        help="Source tag to pull from Docker Hub (default: 29.0)"
     )
     parser.add_argument(
         "--target-tag", 
-        default="latest",
-        help="Target tag for GitHub Container Registry (default: latest)"
+        default="29.0",
+        help="Target tag for GitHub Container Registry (default: 29.0)"
     )
     parser.add_argument(
         "--skip-login", 
